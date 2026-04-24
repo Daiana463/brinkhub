@@ -280,12 +280,12 @@ function initContactForm() {
         honeypot: form.querySelector('[name="website"]'),
       };
 
-      /* Anti-spam: bots rellenan el campo oculto */
+      /* Honeypot: si está relleno es un bot, descartar silenciosamente */
       if (f.honeypot && f.honeypot.value.trim()) return;
 
+      /* Validación: nombre, email y mensaje obligatorios. empresa y web opcionales */
       let valid = true;
-
-      [f.name, f.email, f.message, f.empresa].forEach(field => {
+      [f.name, f.email, f.message].forEach(field => {
         if (!field) return;
         const ok = !!field.value.trim();
         field.classList.toggle('is-error', !ok);
@@ -311,29 +311,39 @@ function initContactForm() {
       if (btn) { btn.disabled = true; btn.textContent = 'Enviando…'; }
       if (errorEl) errorEl.hidden = true;
 
-      /* Endpoint no configurado: mostrar error, nunca abrir cliente de correo */
-      if (FORM_KEY === 'PEGAR_ACCESS_KEY_WEB3FORMS_AQUI' && FORM_ENDPOINT.includes('web3forms')) {
-        if (btn) { btn.disabled = false; btn.textContent = 'Enviar mensaje'; }
-        if (errorEl) errorEl.hidden = false;
-        submitting = false;
-        return;
-      }
+      const emailVal   = f.email?.value.trim()   || '';
+      const nameVal    = f.name?.value.trim()     || '';
+      const messageVal = f.message?.value.trim()  || '';
+      const empresaVal = f.empresa?.value.trim()  || '';
+      const webVal     = f.web?.value.trim()      || '';
 
-      const nombre  = f.name?.value.trim()    || '';
-      const empresa = f.empresa?.value.trim() || '';
-
+      /*
+       * Payload completo para Web3Forms.
+       * replyto  → permite responder directamente al lead desde el email recibido.
+       * botcheck → honeypot de Web3Forms; debe enviarse vacío para indicar humano.
+       * Si Web3Forms devuelve success:true pero el correo no llega, el problema
+       * está fuera de la web (ver comentario al pie de esta función).
+       */
       const payload = {
         access_key: FORM_KEY,
-        /* Campos estándar que Web3Forms usa para formatear el email */
-        name:       nombre,
-        email:      f.email?.value.trim()   || '',
-        subject:    'Nuevo contacto desde BrinkHub — ' + nombre,
-        from_name:  'BrinkHub Web',
-        message:    f.message?.value.trim() || '',
-        /* Campos extra incluidos como datos adicionales */
-        empresa:    empresa,
-        web:        f.web?.value.trim()     || '',
+        name:       nameVal,
+        email:      emailVal,
+        replyto:    emailVal,
+        subject:    'Nueva consulta desde BrinkHub',
+        from_name:  'Formulario BrinkHub',
+        message:    messageVal,
+        empresa:    empresaVal,
+        web:        webVal,
+        botcheck:   '',
       };
+
+      /* Debug: solo activo con ?bh_debug en la URL */
+      if (DEV) {
+        bhLog('Form → payload:', {
+          ...payload,
+          access_key: FORM_KEY.slice(0, 8) + '…' /* clave parcialmente oculta */,
+        });
+      }
 
       try {
         const res = await fetch(FORM_ENDPOINT, {
@@ -345,26 +355,26 @@ function initContactForm() {
         let data = {};
         try { data = await res.json(); } catch (_) {}
 
-        /* Loguear siempre la respuesta de Web3Forms para diagnóstico */
-        console.log('[BrinkHub form] Web3Forms response:', data);
+        bhLog('Form → Web3Forms response:', { success: data.success, message: data.message });
 
         if (!res.ok || data.success === false) {
           throw new Error(data.message || ('HTTP ' + res.status));
         }
 
         showFormSuccess(form);
+        /* Tracking: solo si hay consentimiento — no afecta el envío del formulario */
         try { trackFormLead(form.id); } catch (_) {}
 
       } catch (err) {
         if (btn) { btn.disabled = false; btn.textContent = 'Enviar mensaje'; }
         if (errorEl) errorEl.hidden = false;
-        console.error('[BrinkHub form] Error:', err.message);
+        bhLog('Form → error:', err.message);
       }
 
       submitting = false;
     });
 
-    /* Limpiar errores al escribir */
+    /* Limpiar estado de error campo a campo al escribir */
     form.querySelectorAll('input, textarea').forEach(field => {
       field.addEventListener('input', () => {
         field.classList.remove('is-error');
@@ -374,6 +384,20 @@ function initContactForm() {
     });
   });
 }
+
+/*
+ * Si Web3Forms devuelve success:true y el correo no llega a info@brinkhub.es,
+ * el problema ya NO está en este código. Causas posibles externas:
+ *   1. Email no verificado en web3forms.com — buscar "Please Verify" en la
+ *      bandeja de info@brinkhub.es y hacer clic en el link de confirmación.
+ *   2. Correo en SPAM / Junk / Promociones — revisar todas las carpetas.
+ *   3. Filtros del servidor de correo (Google Workspace, Microsoft 365, cPanel)
+ *      que bloquean remitentes externos o de servicios de relay.
+ *   4. SPF/DKIM/DMARC del dominio brinkhub.es no autoriza a web3forms como
+ *      remitente — revisar registros DNS con mxtoolbox.com.
+ *   5. Web3Forms plan gratuito tiene un límite; verificar en el dashboard
+ *      que no se haya agotado la cuota mensual.
+ */
 
 
 /* ─── 09. NAV LINK ACTIVO ─── */
