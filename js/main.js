@@ -278,11 +278,13 @@ function initContactForm() {
         if (!field) return;
         const ok = !!field.value.trim();
         field.classList.toggle('is-error', !ok);
+        field.setAttribute('aria-invalid', ok ? 'false' : 'true');
         if (!ok) valid = false;
       });
 
       if (f.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.value.trim())) {
         f.email.classList.add('is-error');
+        f.email.setAttribute('aria-invalid', 'true');
         valid = false;
       }
 
@@ -336,6 +338,7 @@ function initContactForm() {
     form.querySelectorAll('input, textarea').forEach(field => {
       field.addEventListener('input', () => {
         field.classList.remove('is-error');
+        field.setAttribute('aria-invalid', 'false');
         field.closest('.form-group')?.classList.remove('is-error');
       });
     });
@@ -365,25 +368,48 @@ function initActiveNav() {
 
 /* ─── 10. SISTEMA DE COOKIES (RGPD + LSSI + Consent Mode v2) ─── */
 
+/*
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  IDS DE TRACKING — configurar cuando estén disponibles      ║
+  ║  Mientras estén vacíos, ningún script de tracking se carga  ║
+  ╚══════════════════════════════════════════════════════════════╝
+
+  GA4_ID:        ID de Google Analytics 4  (ej: 'G-XXXXXXXXXX')
+  GTM_ID:        ID de Google Tag Manager  (ej: 'GTM-XXXXXXX')
+  META_PIXEL_ID: ID de Meta Pixel          (ej: '1234567890123')
+*/
+const GA4_ID        = '';   // 'G-XXXXXXXXXX'
+const GTM_ID        = '';   // 'GTM-XXXXXXX'
+const META_PIXEL_ID = '';   // '1234567890123'
+
 const CONSENT_KEY     = 'bh_consent';
 const CONSENT_VERSION = '2';
 
-/* Consent Mode v2: denegar todo por defecto ANTES de que carguen los scripts */
+/*
+  initConsentModeDefaults():
+  Garantiza que window.gtag exista y los defaults estén aplicados
+  aunque GTM/GA4 no estén cargados. El inline script en <head>
+  ya habrá ejecutado esto antes, pero esta función sirve de respaldo
+  y para cuando se añada GTM posteriormente.
+*/
 function initConsentModeDefaults() {
-  if (typeof window.gtag !== 'function') return;
+  window.dataLayer = window.dataLayer || [];
+  if (typeof window.gtag !== 'function') {
+    window.gtag = function() { window.dataLayer.push(arguments); };
+  }
   window.gtag('consent', 'default', {
-    ad_storage:          'denied',
-    analytics_storage:   'denied',
-    ad_user_data:        'denied',
-    ad_personalization:  'denied',
+    ad_storage:            'denied',
+    analytics_storage:     'denied',
+    ad_user_data:          'denied',
+    ad_personalization:    'denied',
     functionality_storage: 'granted',
-    security_storage:    'granted',
-    wait_for_update:     500,
+    security_storage:      'granted',
+    wait_for_update:       500,
   });
 }
 
 function updateConsentMode(prefs) {
-  if (typeof window.gtag !== 'function') return;
+  /* gtag siempre existe porque initConsentModeDefaults lo garantiza */
   window.gtag('consent', 'update', {
     ad_storage:         prefs.marketing ? 'granted' : 'denied',
     analytics_storage:  prefs.analytics ? 'granted' : 'denied',
@@ -392,21 +418,44 @@ function updateConsentMode(prefs) {
   });
 }
 
-/* Carga dinámica de scripts de seguimiento SÓLO tras consentimiento */
+/* loadAnalytics: carga GA4 o GTM solo tras consentimiento analítica */
 function loadAnalytics() {
-  // Descomenta y completa cuando tengas GA4:
-  // if (document.querySelector('script[data-analytics]')) return;
-  // const s = document.createElement('script');
-  // s.dataset.analytics = '1';
-  // s.async = true;
-  // s.src = 'https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID';
-  // document.head.appendChild(s);
+  if (!GA4_ID && !GTM_ID) return;
+  if (document.querySelector('script[data-bh-analytics]')) return;
+
+  if (GTM_ID) {
+    const s = document.createElement('script');
+    s.dataset.bhAnalytics = '1';
+    s.async = true;
+    s.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`;
+    document.head.appendChild(s);
+    window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+  } else if (GA4_ID) {
+    const s = document.createElement('script');
+    s.dataset.bhAnalytics = '1';
+    s.async = true;
+    s.src = `https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`;
+    document.head.appendChild(s);
+    window.gtag('js', new Date());
+    window.gtag('config', GA4_ID);
+  }
 }
 
+/* loadMarketing: carga Meta Pixel solo tras consentimiento marketing */
 function loadMarketing() {
-  // Descomenta y completa cuando tengas Meta Pixel / Google Ads:
-  // if (document.querySelector('script[data-marketing]')) return;
-  // ... carga dinámica aquí
+  if (!META_PIXEL_ID) return;
+  if (document.querySelector('script[data-bh-marketing]')) return;
+
+  /* Meta Pixel — carga dinámica para no ejecutar antes de consentimiento */
+  (function(f,b,e,v,n,t,s){
+    if(f.fbq)return;
+    n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];
+    t=b.createElement(e);t.async=!0;t.dataset.bhMarketing='1';t.src=v;
+    s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s);
+  }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js'));
+  window.fbq('init', META_PIXEL_ID);
+  window.fbq('track', 'PageView');
 }
 
 function saveConsent(prefs) {
