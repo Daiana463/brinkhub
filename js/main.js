@@ -319,16 +319,21 @@ function initContactForm() {
         return;
       }
 
-      const payload = {
-        nombre:  f.name?.value.trim()    || '',
-        email:   f.email?.value.trim()   || '',
-        empresa: f.empresa?.value.trim() || '',
-        web:     f.web?.value.trim()     || '',
-        mensaje: f.message?.value.trim() || '',
-      };
+      const nombre  = f.name?.value.trim()    || '';
+      const empresa = f.empresa?.value.trim() || '';
 
-      /* Web3Forms requiere access_key en el payload */
-      if (FORM_KEY) payload.access_key = FORM_KEY;
+      const payload = {
+        access_key: FORM_KEY,
+        /* Campos estándar que Web3Forms usa para formatear el email */
+        name:       nombre,
+        email:      f.email?.value.trim()   || '',
+        subject:    'Nuevo contacto desde BrinkHub — ' + nombre,
+        from_name:  'BrinkHub Web',
+        message:    f.message?.value.trim() || '',
+        /* Campos extra incluidos como datos adicionales */
+        empresa:    empresa,
+        web:        f.web?.value.trim()     || '',
+      };
 
       try {
         const res = await fetch(FORM_ENDPOINT, {
@@ -337,9 +342,11 @@ function initContactForm() {
           body: JSON.stringify(payload),
         });
 
-        /* Parsear respuesta: Web3Forms devuelve {success:bool}, Formspree devuelve {next:url} */
         let data = {};
         try { data = await res.json(); } catch (_) {}
+
+        /* Loguear siempre la respuesta de Web3Forms para diagnóstico */
+        console.log('[BrinkHub form] Web3Forms response:', data);
 
         if (!res.ok || data.success === false) {
           throw new Error(data.message || ('HTTP ' + res.status));
@@ -351,7 +358,7 @@ function initContactForm() {
       } catch (err) {
         if (btn) { btn.disabled = false; btn.textContent = 'Enviar mensaje'; }
         if (errorEl) errorEl.hidden = false;
-        bhLog('Form error:', err);
+        console.error('[BrinkHub form] Error:', err.message);
       }
 
       submitting = false;
