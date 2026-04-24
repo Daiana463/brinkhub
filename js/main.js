@@ -10,8 +10,9 @@
    08. Formulario de contacto
    09. Nav link activo
    10. Sistema de cookies (RGPD + Consent Mode v2)
-   11. Filtro de blog
-   12. Init
+   11. Tracking de eventos (GA4 + Meta Pixel)
+   12. Filtro de blog
+   13. Init
    ============================================================ */
 
 'use strict';
@@ -317,6 +318,7 @@ function initContactForm() {
           });
           if (!res.ok) throw new Error(res.status);
           showFormSuccess(form);
+          trackFormLead(form.id);
         } catch {
           if (btn) { btn.disabled = false; btn.textContent = 'Enviar mensaje'; }
           if (errorEl) errorEl.hidden = false;
@@ -329,6 +331,7 @@ function initContactForm() {
         );
         window.open(`mailto:info@brinkhub.es?subject=${subject}&body=${body}`, '_blank');
         showFormSuccess(form);
+        trackFormLead(form.id);
       }
 
       submitting = false;
@@ -368,29 +371,41 @@ function initActiveNav() {
 
 /* ─── 10. SISTEMA DE COOKIES (RGPD + LSSI + Consent Mode v2) ─── */
 
-/*
-  ╔══════════════════════════════════════════════════════════════╗
-  ║  IDS DE TRACKING — configurar cuando estén disponibles      ║
-  ║  Mientras estén vacíos, ningún script de tracking se carga  ║
-  ╚══════════════════════════════════════════════════════════════╝
+/* ── Debug: activo en localhost o con ?bh_debug en la URL ── */
+const DEV = (() => {
+  try {
+    return ['localhost', '127.0.0.1'].includes(window.location.hostname) ||
+           new URLSearchParams(window.location.search).has('bh_debug');
+  } catch { return false; }
+})();
+function bhLog(...args) {
+  if (DEV) console.log('%c[BrinkHub]', 'color:#D4A017;font-weight:bold', ...args);
+}
 
-  GA4_ID:        ID de Google Analytics 4  (ej: 'G-XXXXXXXXXX')
-  GTM_ID:        ID de Google Tag Manager  (ej: 'GTM-XXXXXXX')
-  META_PIXEL_ID: ID de Meta Pixel          (ej: '1234567890123')
+/*
+  ──────────────────────────────────────────────────────────────────
+  IDs DE TRACKING
+  ──────────────────────────────────────────────────────────────────
+  GA4_ID        → Google Analytics 4 (flujo: BrinkHub Web)
+  GTM_ID        → Google Tag Manager  (placeholder — no se carga)
+                  Reemplazar 'GTM-XXXXXXX' con el Container ID real
+                  cuando esté disponible. El sistema lo detecta.
+  META_PIXEL_ID → Meta Pixel (Business: BrinkHub)
+  ──────────────────────────────────────────────────────────────────
 */
-const GA4_ID        = '';   // 'G-XXXXXXXXXX'
-const GTM_ID        = '';   // 'GTM-XXXXXXX'
-const META_PIXEL_ID = '';   // '1234567890123'
+const GA4_ID        = 'G-BSECGJGCDQ';     // Google Analytics 4
+const GTM_ID        = 'GTM-XXXXXXX';       // GTM placeholder — sin ID real, no carga
+const META_PIXEL_ID = '2364129480769581';  // Meta Pixel
 
 const CONSENT_KEY     = 'bh_consent';
 const CONSENT_VERSION = '2';
 
 /*
   initConsentModeDefaults():
-  Garantiza que window.gtag exista y los defaults estén aplicados
-  aunque GTM/GA4 no estén cargados. El inline script en <head>
-  ya habrá ejecutado esto antes, pero esta función sirve de respaldo
-  y para cuando se añada GTM posteriormente.
+  Garantiza que window.gtag exista y los defaults estén en el dataLayer
+  ANTES de que cualquier script de tracking pueda cargar.
+  El inline script de <head> ya lo hace, pero esta función sirve de
+  respaldo y asegura compatibilidad cuando se añada GTM.
 */
 function initConsentModeDefaults() {
   window.dataLayer = window.dataLayer || [];
@@ -406,56 +421,68 @@ function initConsentModeDefaults() {
     security_storage:      'granted',
     wait_for_update:       500,
   });
+  bhLog('Consent defaults aplicados (todo denegado)');
 }
 
 function updateConsentMode(prefs) {
-  /* gtag siempre existe porque initConsentModeDefaults lo garantiza */
   window.gtag('consent', 'update', {
     ad_storage:         prefs.marketing ? 'granted' : 'denied',
     analytics_storage:  prefs.analytics ? 'granted' : 'denied',
     ad_user_data:       prefs.marketing ? 'granted' : 'denied',
     ad_personalization: prefs.marketing ? 'granted' : 'denied',
   });
+  bhLog('Consent Mode actualizado →', {
+    analytics: prefs.analytics ? 'granted' : 'denied',
+    marketing: prefs.marketing ? 'granted' : 'denied',
+  });
 }
 
-/* loadAnalytics: carga GA4 o GTM solo tras consentimiento analítica */
+/* loadAnalytics: carga GA4 directo (o GTM cuando tenga Container ID real) */
 function loadAnalytics() {
-  if (!GA4_ID && !GTM_ID) return;
+  const gtmActive = GTM_ID && GTM_ID !== 'GTM-XXXXXXX';
+  if (!GA4_ID && !gtmActive) return;
   if (document.querySelector('script[data-bh-analytics]')) return;
 
-  if (GTM_ID) {
+  if (gtmActive) {
+    /* GTM — se activa cuando se reemplaza el placeholder por un ID real */
     const s = document.createElement('script');
     s.dataset.bhAnalytics = '1';
     s.async = true;
     s.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`;
     document.head.appendChild(s);
     window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+    bhLog('GTM inicializado:', GTM_ID);
   } else if (GA4_ID) {
+    /* GA4 directo (activo) */
     const s = document.createElement('script');
     s.dataset.bhAnalytics = '1';
     s.async = true;
     s.src = `https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`;
     document.head.appendChild(s);
-    window.gtag('js', new Date());
-    window.gtag('config', GA4_ID);
+    s.onload = function() {
+      window.gtag('js', new Date());
+      window.gtag('config', GA4_ID, { send_page_view: true });
+      bhLog('GA4 inicializado:', GA4_ID);
+    };
   }
 }
 
 /* loadMarketing: carga Meta Pixel solo tras consentimiento marketing */
 function loadMarketing() {
   if (!META_PIXEL_ID) return;
-  if (document.querySelector('script[data-bh-marketing]')) return;
+  if (typeof window.fbq === 'function') return;
 
-  /* Meta Pixel — carga dinámica para no ejecutar antes de consentimiento */
-  (function(f,b,e,v,n,t,s){
+  /* Meta Pixel — inyección dinámica, nunca antes del consentimiento */
+  !function(f,b,e,v,n,t,s){
     if(f.fbq)return;
     n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
     if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];
     t=b.createElement(e);t.async=!0;t.dataset.bhMarketing='1';t.src=v;
     s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s);
-  }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js'));
+  }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
   window.fbq('init', META_PIXEL_ID);
   window.fbq('track', 'PageView');
+  bhLog('Meta Pixel inicializado:', META_PIXEL_ID);
 }
 
 function saveConsent(prefs) {
@@ -468,6 +495,7 @@ function saveConsent(prefs) {
     preferences: !!prefs.preferences,
   };
   try { localStorage.setItem(CONSENT_KEY, JSON.stringify(data)); } catch (_) {}
+  bhLog('Consentimiento guardado:', data);
   return data;
 }
 
@@ -484,6 +512,7 @@ function applyConsent(prefs) {
   updateConsentMode(prefs);
   if (prefs.analytics)  loadAnalytics();
   if (prefs.marketing)  loadMarketing();
+  bhLog('Consentimiento aplicado:', prefs);
 }
 
 /* Inyecta el modal en el DOM una sola vez (funciona en todas las páginas) */
@@ -672,7 +701,78 @@ function initCookieSettingsLinks() {
 }
 
 
-/* ─── 11. FILTRO DE BLOG ─── */
+/* ─── 11. TRACKING DE EVENTOS ─── */
+
+/* Envía evento GA4 solo si hay consentimiento analítica */
+function trackGA4(eventName, params) {
+  const c = loadConsentData();
+  if (!c?.analytics || !GA4_ID) return;
+  window.gtag('event', eventName, params || {});
+  bhLog('[GA4]', eventName, params || {});
+}
+
+/* Envía evento Meta solo si hay consentimiento marketing y fbq está cargado */
+function trackMeta(eventName, params) {
+  const c = loadConsentData();
+  if (!c?.marketing || typeof window.fbq !== 'function') return;
+  window.fbq('track', eventName, params || {});
+  bhLog('[Meta]', eventName, params || {});
+}
+
+/* Dispara eventos de lead tras envío exitoso del formulario */
+function trackFormLead(formId) {
+  trackGA4('generate_lead', { method: 'contact_form', form_id: formId || 'contact' });
+  trackGA4('form_submit',   { form_id: formId || 'contact' });
+  trackMeta('Lead',         { content_name: 'contact_form' });
+  bhLog('[Track] Lead disparado, form:', formId);
+}
+
+function initEventTracking() {
+  /* WhatsApp */
+  document.querySelectorAll('.whatsapp-bubble').forEach(el => {
+    el.addEventListener('click', () => {
+      trackGA4('click_whatsapp');
+      trackMeta('Contact', { content_name: 'whatsapp' });
+    });
+  });
+
+  /* Email */
+  document.querySelectorAll('a[href^="mailto:"]').forEach(el => {
+    el.addEventListener('click', () => trackGA4('click_email'));
+  });
+
+  /* Teléfono */
+  document.querySelectorAll('a[href^="tel:"]').forEach(el => {
+    el.addEventListener('click', () => trackGA4('click_phone'));
+  });
+
+  /* Nav "Contáctanos" — detectado por clase y href, sin tocar HTML */
+  document.querySelectorAll('a.btn--nav[href*="contacto"], a.btn[href*="contacto.html"]').forEach(el => {
+    if (!el.dataset.track) {
+      el.addEventListener('click', () => trackGA4('click_cta_contact'));
+    }
+  });
+
+  /* CTAs con atributo data-track explícito */
+  document.querySelectorAll('[data-track]').forEach(el => {
+    el.addEventListener('click', () => {
+      const evt = el.dataset.track;
+      if (!evt) return;
+      trackGA4(evt);
+      if (evt === 'cta_diagnostico') {
+        trackMeta('Contact', { content_name: 'cta_diagnostico' });
+      }
+    });
+  });
+
+  /* Página de contacto: evento de visita */
+  if (/contacto/.test(window.location.href)) {
+    trackGA4('visit_contact_page', { page_title: document.title });
+  }
+}
+
+
+/* ─── 12. FILTRO DE BLOG ─── */
 function initBlogFilter() {
   const filters = document.querySelectorAll('.blog-filter[data-filter]');
   const cards   = document.querySelectorAll('.blog-card[data-category]');
@@ -691,7 +791,7 @@ function initBlogFilter() {
 }
 
 
-/* ─── 12. INIT ─── */
+/* ─── 13. INIT ─── */
 document.addEventListener('DOMContentLoaded', () => {
   initHeader();
   initMobileMenu();
@@ -705,5 +805,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initCookieBanner();
   initCookieModal();
   initCookieSettingsLinks();
+  initEventTracking();
   initBlogFilter();
 });
