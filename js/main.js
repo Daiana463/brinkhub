@@ -3,17 +3,19 @@
    01. Header scroll
    02. Menú móvil
    03. Smooth scroll
-   04. Animaciones de scroll (Intersection Observer)
-   05. Contador de estadísticas
+   04. Animaciones de scroll
+   05. Contadores de estadísticas
    06. FAQ accordion
    07. Analizador de sitio (demo)
-   08. Formulario de contacto (Formspree)
+   08. Formulario de contacto
    09. Nav link activo
-   10. Banner de cookies
-   11. Init
+   10. Sistema de cookies (RGPD + Consent Mode v2)
+   11. Filtro de blog
+   12. Init
    ============================================================ */
 
 'use strict';
+
 
 /* ─── 01. HEADER SCROLL ─── */
 function initHeader() {
@@ -63,7 +65,7 @@ function initSmoothScroll() {
       if (!target) return;
       e.preventDefault();
       const offset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h') || '72');
-      const top    = target.getBoundingClientRect().top + window.scrollY - offset - 12;
+      const top = target.getBoundingClientRect().top + window.scrollY - offset - 12;
       window.scrollTo({ top, behavior: 'smooth' });
     });
   });
@@ -75,9 +77,17 @@ function initScrollAnimations() {
   const elements = document.querySelectorAll('[data-animate]');
   if (!elements.length) return;
 
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    elements.forEach(el => el.classList.add('is-visible'));
+    return;
+  }
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); }
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -32px 0px' });
 
@@ -85,8 +95,12 @@ function initScrollAnimations() {
 }
 
 
-/* ─── 05. CONTADOR DE ESTADÍSTICAS ─── */
+/* ─── 05. CONTADORES ─── */
 function animateCounter(el, target, duration = 3200) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    el.textContent = target;
+    return;
+  }
   const start = performance.now();
   const update = (now) => {
     const progress = Math.min((now - start) / duration, 1);
@@ -103,7 +117,10 @@ function initCounters() {
   if (!counters.length) return;
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) { animateCounter(entry.target, parseInt(entry.target.dataset.target, 10)); observer.unobserve(entry.target); }
+      if (entry.isIntersecting) {
+        animateCounter(entry.target, parseInt(entry.target.dataset.target, 10));
+        observer.unobserve(entry.target);
+      }
     });
   }, { threshold: 0.5 });
   counters.forEach(c => observer.observe(c));
@@ -131,25 +148,17 @@ function initFAQ() {
         if (ob && od && other !== item) {
           ob.setAttribute('aria-expanded', 'false');
           od.classList.remove('is-open');
-          other.classList.remove('is-open');
         }
       });
 
-      if (isOpen) {
-        btn.setAttribute('aria-expanded', 'false');
-        body.classList.remove('is-open');
-        item.classList.remove('is-open');
-      } else {
-        btn.setAttribute('aria-expanded', 'true');
-        body.classList.add('is-open');
-        item.classList.add('is-open');
-      }
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      body.classList.toggle('is-open', !isOpen);
     });
   });
 }
 
 
-/* ─── 07. ANALIZADOR DE SITIO (demo) ─── */
+/* ─── 07. ANALIZADOR (demo) ─── */
 function initAnalyzer() {
   const form    = document.getElementById('analyzerForm');
   const input   = document.getElementById('analyzerUrl');
@@ -171,18 +180,13 @@ function initAnalyzer() {
     catch { return false; }
   };
 
-  const colorForScore = (score) => {
-    if (score >= 90) return '#22c55e';
-    if (score >= 50) return '#f97316';
-    return '#ef4444';
-  };
+  const colorForScore = (s) => s >= 90 ? '#22c55e' : s >= 50 ? '#f97316' : '#ef4444';
 
   const animateRing = (arc, score) => {
     if (!arc) return;
-    const circumference = 2 * Math.PI * 15.91;
-    const dash = (score / 100) * circumference;
+    const c = 2 * Math.PI * 15.91;
     arc.style.transition = 'stroke-dasharray 1s ease-out, stroke 0.3s';
-    arc.style.strokeDasharray = `${dash} ${circumference - dash}`;
+    arc.style.strokeDasharray = `${(score / 100) * c} ${c - (score / 100) * c}`;
     arc.style.stroke = colorForScore(score);
   };
 
@@ -192,13 +196,13 @@ function initAnalyzer() {
     results.hidden = false;
     keys.forEach((key, i) => {
       const el = scoreEls[key];
-      const score = scores[i];
       if (!el) return;
+      const score = scores[i];
       let val = 0;
-      const interval = setInterval(() => {
+      const iv = setInterval(() => {
         val = Math.min(val + Math.ceil(score / 20), score);
         el.textContent = val;
-        if (val >= score) clearInterval(interval);
+        if (val >= score) clearInterval(iv);
       }, 50);
       setTimeout(() => animateRing(arcs[i], score), 150 + i * 100);
     });
@@ -221,92 +225,118 @@ function initAnalyzer() {
 }
 
 
-/* ─── 08. FORMULARIO DE CONTACTO (Formspree) ─── */
+/* ─── 08. FORMULARIO DE CONTACTO ─── */
 /*
-   CONFIGURACIÓN: Crea una cuenta en https://formspree.io, crea un nuevo
-   formulario con el email info@brinkhub.es y reemplaza YOUR_FORM_ID
-   por el identificador que te asignen (ej: xpzeqlrv).
+   CONFIGURACIÓN FORMSPREE:
+   1. Crea cuenta gratuita en https://formspree.io
+   2. Crea formulario apuntando a info@brinkhub.es
+   3. Reemplaza 'YOUR_FORM_ID' con el ID asignado (ej: xpzeqlrv)
+
+   Si el ID no está configurado, el formulario usa mailto como fallback.
 */
 const FORMSPREE_ID = 'YOUR_FORM_ID';
 
+function showFormSuccess(form) {
+  const success = form.querySelector('.form-success');
+  const btn = form.querySelector('button[type="submit"]');
+  const consent = form.querySelector('[name="consent"]');
+  form.querySelectorAll('input:not([type="checkbox"]), textarea').forEach(f => { f.value = ''; });
+  if (consent) consent.checked = false;
+  if (btn) { btn.disabled = false; btn.textContent = 'Enviar mensaje'; }
+  if (success) {
+    success.hidden = false;
+    success.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    setTimeout(() => { success.hidden = true; }, 8000);
+  }
+}
+
 function initContactForm() {
-  const forms = document.querySelectorAll('.js-contact-form');
-  forms.forEach(form => {
-    const success = form.querySelector('.form-success');
+  document.querySelectorAll('.js-contact-form').forEach(form => {
     const errorEl = form.querySelector('.form-error');
-    if (!form) return;
+    let submitting = false;
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (submitting) return;
 
-      const name    = form.querySelector('[name="nombre"]');
-      const email   = form.querySelector('[name="email"]');
-      const web     = form.querySelector('[name="web"]');
-      const message = form.querySelector('[name="mensaje"]');
-      const consent = form.querySelector('[name="consent"]');
+      const f = {
+        name:     form.querySelector('[name="nombre"]'),
+        email:    form.querySelector('[name="email"]'),
+        empresa:  form.querySelector('[name="empresa"]'),
+        web:      form.querySelector('[name="web"]'),
+        message:  form.querySelector('[name="mensaje"]'),
+        consent:  form.querySelector('[name="consent"]'),
+        honeypot: form.querySelector('[name="website"]'),
+      };
+
+      /* Anti-spam: bots rellenan el campo oculto */
+      if (f.honeypot && f.honeypot.value.trim()) return;
+
       let valid = true;
 
-      [name, email, message].forEach(field => {
+      [f.name, f.email, f.message, f.empresa].forEach(field => {
         if (!field) return;
-        if (!field.value.trim()) { field.classList.add('is-error'); valid = false; }
-        else field.classList.remove('is-error');
+        const ok = !!field.value.trim();
+        field.classList.toggle('is-error', !ok);
+        if (!ok) valid = false;
       });
 
-      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
-        email.classList.add('is-error'); valid = false;
+      if (f.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.value.trim())) {
+        f.email.classList.add('is-error');
+        valid = false;
       }
 
-      if (consent && !consent.checked) {
-        const consentGroup = consent.closest('.form-group');
-        if (consentGroup) consentGroup.classList.add('is-error');
+      if (f.consent && !f.consent.checked) {
+        f.consent.closest('.form-group')?.classList.add('is-error');
         valid = false;
       }
 
       if (!valid) { form.querySelector('.is-error')?.focus(); return; }
 
       const btn = form.querySelector('button[type="submit"]');
+      submitting = true;
       if (btn) { btn.disabled = true; btn.textContent = 'Enviando…'; }
       if (errorEl) errorEl.hidden = true;
 
-      try {
-        const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({
-            nombre:  name?.value.trim()    || '',
-            email:   email?.value.trim()   || '',
-            web:     web?.value.trim()     || '',
-            mensaje: message?.value.trim() || ''
-          })
-        });
+      const payload = {
+        nombre:  f.name?.value.trim()    || '',
+        email:   f.email?.value.trim()   || '',
+        empresa: f.empresa?.value.trim() || '',
+        web:     f.web?.value.trim()     || '',
+        mensaje: f.message?.value.trim() || '',
+      };
 
-        if (res.ok) {
-          form.querySelectorAll('input:not([type="checkbox"]), textarea').forEach(f => f.value = '');
-          if (consent) consent.checked = false;
+      if (FORMSPREE_ID !== 'YOUR_FORM_ID') {
+        try {
+          const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          if (!res.ok) throw new Error(res.status);
+          showFormSuccess(form);
+        } catch {
           if (btn) { btn.disabled = false; btn.textContent = 'Enviar mensaje'; }
-          if (success) {
-            success.hidden = false;
-            success.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            setTimeout(() => { success.hidden = true; }, 7000);
-          }
-        } else {
-          throw new Error('Error ' + res.status);
+          if (errorEl) errorEl.hidden = false;
         }
-      } catch (err) {
-        if (btn) { btn.disabled = false; btn.textContent = 'Enviar mensaje'; }
-        if (errorEl) {
-          errorEl.hidden = false;
-        } else {
-          window.location.href = `mailto:info@brinkhub.es?subject=${encodeURIComponent('Consulta desde brinkhub.es')}&body=${encodeURIComponent(`Nombre: ${name?.value}\nEmail: ${email?.value}\nWeb: ${web?.value}\n\n${message?.value}`)}`;
-        }
+      } else {
+        /* Fallback mailto cuando Formspree no está configurado */
+        const subject = encodeURIComponent('Consulta desde brinkhub.es');
+        const body = encodeURIComponent(
+          `Nombre: ${payload.nombre}\nEmail: ${payload.email}\nEmpresa: ${payload.empresa}\nWeb: ${payload.web}\n\n${payload.mensaje}`
+        );
+        window.open(`mailto:info@brinkhub.es?subject=${subject}&body=${body}`, '_blank');
+        showFormSuccess(form);
       }
+
+      submitting = false;
     });
 
+    /* Limpiar errores al escribir */
     form.querySelectorAll('input, textarea').forEach(field => {
       field.addEventListener('input', () => {
         field.classList.remove('is-error');
-        const grp = field.closest('.form-group');
-        if (grp) grp.classList.remove('is-error');
+        field.closest('.form-group')?.classList.remove('is-error');
       });
     });
   });
@@ -333,27 +363,263 @@ function initActiveNav() {
 }
 
 
-/* ─── 10. BANNER DE COOKIES ─── */
+/* ─── 10. SISTEMA DE COOKIES (RGPD + LSSI + Consent Mode v2) ─── */
+
+const CONSENT_KEY     = 'bh_consent';
+const CONSENT_VERSION = '2';
+
+/* Consent Mode v2: denegar todo por defecto ANTES de que carguen los scripts */
+function initConsentModeDefaults() {
+  if (typeof window.gtag !== 'function') return;
+  window.gtag('consent', 'default', {
+    ad_storage:          'denied',
+    analytics_storage:   'denied',
+    ad_user_data:        'denied',
+    ad_personalization:  'denied',
+    functionality_storage: 'granted',
+    security_storage:    'granted',
+    wait_for_update:     500,
+  });
+}
+
+function updateConsentMode(prefs) {
+  if (typeof window.gtag !== 'function') return;
+  window.gtag('consent', 'update', {
+    ad_storage:         prefs.marketing ? 'granted' : 'denied',
+    analytics_storage:  prefs.analytics ? 'granted' : 'denied',
+    ad_user_data:       prefs.marketing ? 'granted' : 'denied',
+    ad_personalization: prefs.marketing ? 'granted' : 'denied',
+  });
+}
+
+/* Carga dinámica de scripts de seguimiento SÓLO tras consentimiento */
+function loadAnalytics() {
+  // Descomenta y completa cuando tengas GA4:
+  // if (document.querySelector('script[data-analytics]')) return;
+  // const s = document.createElement('script');
+  // s.dataset.analytics = '1';
+  // s.async = true;
+  // s.src = 'https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID';
+  // document.head.appendChild(s);
+}
+
+function loadMarketing() {
+  // Descomenta y completa cuando tengas Meta Pixel / Google Ads:
+  // if (document.querySelector('script[data-marketing]')) return;
+  // ... carga dinámica aquí
+}
+
+function saveConsent(prefs) {
+  const data = {
+    v:           CONSENT_VERSION,
+    ts:          Date.now(),
+    necessary:   true,
+    analytics:   !!prefs.analytics,
+    marketing:   !!prefs.marketing,
+    preferences: !!prefs.preferences,
+  };
+  try { localStorage.setItem(CONSENT_KEY, JSON.stringify(data)); } catch (_) {}
+  return data;
+}
+
+function loadConsentData() {
+  try {
+    const raw = localStorage.getItem(CONSENT_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    return data.v === CONSENT_VERSION ? data : null;
+  } catch { return null; }
+}
+
+function applyConsent(prefs) {
+  updateConsentMode(prefs);
+  if (prefs.analytics)  loadAnalytics();
+  if (prefs.marketing)  loadMarketing();
+}
+
+/* Inyecta el modal en el DOM una sola vez (funciona en todas las páginas) */
+function createCookieModal() {
+  if (document.getElementById('cookieModal')) return;
+
+  const modal = document.createElement('div');
+  modal.id = 'cookieModal';
+  modal.className = 'cookie-modal';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-label', 'Preferencias de privacidad');
+  modal.setAttribute('aria-hidden', 'true');
+
+  modal.innerHTML = `
+    <div class="cookie-modal__overlay" id="cookieModalOverlay"></div>
+    <div class="cookie-modal__panel">
+      <div class="cookie-modal__header">
+        <h2 class="cookie-modal__title">Preferencias de privacidad</h2>
+        <button class="cookie-modal__close" id="cookieModalClose" aria-label="Cerrar panel de preferencias">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="cookie-modal__body">
+        <p class="cookie-modal__desc">Elige qué categorías de cookies aceptas. Puedes cambiar estas preferencias en cualquier momento desde el pie de página. Las cookies necesarias no se pueden desactivar.</p>
+        <div class="cookie-category">
+          <div class="cookie-category__header">
+            <div class="cookie-category__info">
+              <strong>Necesarias</strong>
+              <p>Esenciales para el funcionamiento básico del sitio: sesión, seguridad y navegación. No almacenan información personal identificable.</p>
+            </div>
+            <span class="cookie-toggle__always-on">Siempre activas</span>
+          </div>
+        </div>
+        <div class="cookie-category">
+          <div class="cookie-category__header">
+            <div class="cookie-category__info">
+              <strong>Analítica</strong>
+              <p>Nos ayudan a entender cómo interactúan los visitantes con el sitio. Toda la información es anónima y agregada (p.ej. Google Analytics).</p>
+            </div>
+            <label class="cookie-toggle__switch" aria-label="Activar cookies de analítica">
+              <input type="checkbox" id="cookie-analytics" name="analytics">
+              <span class="cookie-toggle__track"></span>
+            </label>
+          </div>
+        </div>
+        <div class="cookie-category">
+          <div class="cookie-category__header">
+            <div class="cookie-category__info">
+              <strong>Marketing</strong>
+              <p>Permiten mostrar publicidad personalizada basada en tus intereses en plataformas como Google o Meta (Facebook / Instagram).</p>
+            </div>
+            <label class="cookie-toggle__switch" aria-label="Activar cookies de marketing">
+              <input type="checkbox" id="cookie-marketing" name="marketing">
+              <span class="cookie-toggle__track"></span>
+            </label>
+          </div>
+        </div>
+        <div class="cookie-category">
+          <div class="cookie-category__header">
+            <div class="cookie-category__info">
+              <strong>Preferencias</strong>
+              <p>Recuerdan configuraciones personalizadas como idioma preferido o ajustes de visualización del contenido.</p>
+            </div>
+            <label class="cookie-toggle__switch" aria-label="Activar cookies de preferencias">
+              <input type="checkbox" id="cookie-preferences" name="preferences">
+              <span class="cookie-toggle__track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="cookie-modal__footer">
+        <button id="cookieSavePrefs" class="btn btn--primary btn--full">Guardar mis preferencias</button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(modal);
+}
+
+function openCookieModal() {
+  createCookieModal();
+  const modal = document.getElementById('cookieModal');
+  if (!modal) return;
+
+  /* Cargar preferencias actuales en los toggles */
+  const stored = loadConsentData() || {};
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.checked = !!val; };
+  set('cookie-analytics',   stored.analytics);
+  set('cookie-marketing',   stored.marketing);
+  set('cookie-preferences', stored.preferences);
+
+  modal.classList.add('is-open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('cookieModalClose')?.focus(), 50);
+}
+
+function closeCookieModal() {
+  const modal = document.getElementById('cookieModal');
+  if (!modal) return;
+  modal.classList.remove('is-open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+function dismissBanner(prefs) {
+  const banner = document.getElementById('cookieBanner');
+  const saved  = saveConsent(prefs);
+  applyConsent(saved);
+  if (banner) {
+    banner.classList.remove('is-visible');
+    setTimeout(() => { banner.style.display = 'none'; }, 420);
+  }
+}
+
 function initCookieBanner() {
   const banner = document.getElementById('cookieBanner');
   if (!banner) return;
 
-  const stored = localStorage.getItem('bh_cookies');
-  if (stored) { banner.style.display = 'none'; return; }
+  /* Aplicar consent mode defaults antes de todo */
+  initConsentModeDefaults();
 
-  setTimeout(() => { banner.classList.add('is-visible'); }, 700);
+  const stored = loadConsentData();
+  if (stored) {
+    banner.style.display = 'none';
+    applyConsent(stored);
+    return;
+  }
 
-  const accept  = document.getElementById('cookieAccept');
-  const decline = document.getElementById('cookieDecline');
+  /* Añadir botón "Gestionar" si el HTML solo tiene 2 botones */
+  const actions = banner.querySelector('.cookie-banner__actions');
+  if (actions && !document.getElementById('cookieManage')) {
+    const btn = document.createElement('button');
+    btn.id = 'cookieManage';
+    btn.className = 'btn btn--ghost btn--sm';
+    btn.textContent = 'Gestionar';
+    actions.insertBefore(btn, actions.firstChild);
+  }
 
-  const dismiss = (value) => {
-    localStorage.setItem('bh_cookies', value);
-    banner.classList.remove('is-visible');
-    setTimeout(() => { banner.style.display = 'none'; }, 420);
-  };
+  setTimeout(() => banner.classList.add('is-visible'), 700);
 
-  if (accept)  accept.addEventListener('click',  () => dismiss('accepted'));
-  if (decline) decline.addEventListener('click', () => dismiss('declined'));
+  document.getElementById('cookieAccept')?.addEventListener('click', () => {
+    dismissBanner({ analytics: true, marketing: true, preferences: true });
+  });
+  document.getElementById('cookieDecline')?.addEventListener('click', () => {
+    dismissBanner({ analytics: false, marketing: false, preferences: false });
+  });
+  document.getElementById('cookieManage')?.addEventListener('click', openCookieModal);
+}
+
+function initCookieModal() {
+  /* Delegación de eventos: el modal puede crearse después */
+  document.addEventListener('click', (e) => {
+    if (e.target.id === 'cookieModalClose' || e.target.closest('#cookieModalClose')) {
+      closeCookieModal();
+    }
+    if (e.target.id === 'cookieModalOverlay') {
+      closeCookieModal();
+    }
+    if (e.target.id === 'cookieSavePrefs') {
+      const prefs = {
+        analytics:   document.getElementById('cookie-analytics')?.checked   || false,
+        marketing:   document.getElementById('cookie-marketing')?.checked   || false,
+        preferences: document.getElementById('cookie-preferences')?.checked || false,
+      };
+      dismissBanner(prefs);
+      closeCookieModal();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const modal = document.getElementById('cookieModal');
+      if (modal?.classList.contains('is-open')) closeCookieModal();
+    }
+  });
+}
+
+/* Enlace "Preferencias de cookies" en el footer (todas las páginas) */
+function initCookieSettingsLinks() {
+  document.querySelectorAll('[data-cookie-settings]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); openCookieModal(); });
+  });
 }
 
 
@@ -388,5 +654,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initContactForm();
   initActiveNav();
   initCookieBanner();
+  initCookieModal();
+  initCookieSettingsLinks();
   initBlogFilter();
 });

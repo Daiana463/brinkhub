@@ -1,0 +1,12 @@
+# Claude Code settings — no publicar
+.claude/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Carpetas de desarrollo vacías
+components/
+docs/
+pages/

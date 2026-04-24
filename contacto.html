@@ -60,9 +60,9 @@
         <div class="contact-layout">
 
           <div class="contact-left" data-animate>
-            <span class="contact-eyebrow">Hablemos</span>
-            <h1 id="contact-title" class="section__title text-white">¿Listo para delegar<br>la operativa?</h1>
-            <p class="text-white-muted">La primera consulta es gratuita y sin compromiso. Te decimos con honestidad si podemos ayudarte y cómo.</p>
+            <span class="contact-eyebrow">Primera consulta gratuita</span>
+            <h1 id="contact-title" class="section__title text-white">Cuéntanos tu situación.<br>Te respondemos en 24 h.</h1>
+            <p class="text-white-muted">Sin compromiso y sin humo. Si podemos ayudarte, te lo decimos con honestidad. Si no, también.</p>
             <ul class="contact-details" role="list">
               <li>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -91,9 +91,15 @@
                   <input type="email" id="cf-email" name="email" placeholder="tu@empresa.com" autocomplete="email" required />
                 </div>
               </div>
-              <div class="form-group">
-                <label for="cf-web">Web de tu tienda</label>
-                <input type="url" id="cf-web" name="web" placeholder="https://miecommerce.com" autocomplete="url" />
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="cf-empresa">Empresa</label>
+                  <input type="text" id="cf-empresa" name="empresa" placeholder="Nombre de tu empresa" autocomplete="organization" required />
+                </div>
+                <div class="form-group">
+                  <label for="cf-web">Web <span style="font-weight:400;color:rgba(255,255,255,0.4)">(opcional)</span></label>
+                  <input type="url" id="cf-web" name="web" placeholder="https://miecommerce.com" autocomplete="url" />
+                </div>
               </div>
               <div class="form-group">
                 <label for="cf-message">¿En qué podemos ayudarte?</label>
@@ -104,6 +110,11 @@
                   <input type="checkbox" id="cf-consent" name="consent" required />
                   <span class="form-consent__text">He leído y acepto la <a href="politica-privacidad.html" target="_blank">política de privacidad</a>. Consiento el tratamiento de mis datos personales para que BrinkHub atienda mi consulta.</span>
                 </label>
+              </div>
+              <!-- Honeypot anti-spam: oculto para humanos, visible para bots -->
+              <div class="form-group form-group--honeypot" aria-hidden="true">
+                <label for="cf-website">No rellenar</label>
+                <input type="text" id="cf-website" name="website" tabindex="-1" autocomplete="off" />
               </div>
               <button type="submit" class="btn btn--primary btn--full">Enviar mensaje</button>
               <p class="form-note">Respondemos en menos de 24 horas en días laborables.</p>
@@ -187,22 +198,23 @@
           <a href="politica-privacidad.html">Política de privacidad</a>
           <a href="contacto.html">Información de contacto</a>
           <a href="aviso-legal.html">Aviso legal</a>
-          <a href="politica-cookies.html">Preferencias de cookies</a>
+          <a href="politica-cookies.html" data-cookie-settings>Preferencias de cookies</a>
         </div>
       </div>
     </div>
   </footer>
 
 
-  <!-- Cookie banner -->
-  <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Preferencias de cookies" aria-live="polite">
+  <!-- Banner de cookies (RGPD / LSSI-CE) -->
+  <div id="cookieBanner" class="cookie-banner" role="dialog" aria-modal="true" aria-label="Aviso de cookies" aria-live="polite" aria-atomic="true">
     <div class="cookie-banner__inner">
       <div class="cookie-banner__text">
-        <p>Usamos cookies propias y de terceros para mejorar tu experiencia de navegación y analizar el tráfico. Puedes <a href="politica-cookies.html">gestionar tus preferencias</a> o consultar nuestra <a href="politica-privacidad.html">política de privacidad</a>.</p>
+        <p>Utilizamos cookies esenciales para el funcionamiento del sitio. Con tu permiso, también usamos cookies de análisis y marketing. <a href="politica-cookies.html">Política de cookies</a> · <a href="politica-privacidad.html">Privacidad</a></p>
       </div>
       <div class="cookie-banner__actions">
+        <button id="cookieManage"  class="btn btn--ghost btn--sm">Gestionar</button>
         <button id="cookieDecline" class="btn btn--ghost btn--sm">Solo necesarias</button>
-        <button id="cookieAccept" class="btn btn--primary btn--sm">Aceptar todas</button>
+        <button id="cookieAccept"  class="btn btn--primary btn--sm">Aceptar todo</button>
       </div>
     </div>
   </div>

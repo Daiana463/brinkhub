@@ -16,12 +16,14 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": ["Organization", "LocalBusiness"],
     "name": "BrinkHub",
     "url": "https://www.brinkhub.es",
     "description": "Agencia especializada en gestión de catálogo y operativa ecommerce para tiendas online.",
     "email": "info@brinkhub.es",
     "telephone": "+34634476261",
+    "priceRange": "€€",
+    "openingHours": "Mo-Fr 09:00-17:00",
     "contactPoint": {
       "@type": "ContactPoint",
       "telephone": "+34634476261",
@@ -30,6 +32,54 @@
       "hoursAvailable": "Mo-Fr 09:00-17:00"
     },
     "sameAs": []
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "¿Por qué es importante la gestión continua de un ecommerce?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Un ecommerce no falla por la plataforma, falla por falta de gestión. Con el tiempo, el catálogo pierde coherencia, los precios quedan desactualizados y las promociones no se aplican correctamente. La gestión continua permite mantener la tienda ordenada, actualizada y alineada con el negocio, evitando errores que afectan directamente la conversión."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Qué incluye un servicio de gestión de ecommerce?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Incluye la carga y actualización de productos, control de precios, organización de colecciones, configuración de variantes y mantenimiento del catálogo. También la configuración de descuentos, preparación de campañas, actualización de contenidos y soporte operativo para acciones comerciales."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Conviene externalizar la gestión de una tienda online?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sí, cuando el negocio necesita mantener una operación constante sin dedicar recursos internos. Externalizar permite sostener una estructura ordenada, evitar errores operativos y asegurar que la tienda evolucione junto con el negocio."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Cuánto cuesta un servicio de gestión de ecommerce?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "El coste depende del volumen de catálogo, la frecuencia de actualización y el nivel de operación requerido. Trabajamos con planes adaptados a cada negocio. Escríbenos y te hacemos una propuesta sin compromiso."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿Puedo delegar completamente la gestión de mi tienda?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sí. El servicio está pensado para que puedas delegar la gestión operativa del ecommerce y centrarte en el negocio. Nos encargamos del catálogo, la estructura y las acciones necesarias para que la tienda funcione de forma ordenada y continua."
+        }
+      }
+    ]
   }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -79,21 +129,23 @@
     <section id="hero" class="hero" aria-labelledby="hero-title">
       <div class="container">
         <div class="hero__inner">
-          <span class="hero__eyebrow">Especialistas en operativa ecommerce</span>
+          <span class="hero__eyebrow">Gestión operativa Shopify · Consulta gratuita</span>
           <h1 id="hero-title" class="hero__title">
-            Tu tienda necesita<br>
-            <em class="hero__accent">gestión real</em>, no<br>
-            parches <em class="hero__accent">puntuales</em>
+            Tu ecommerce puede<br>
+            vender más. El freno<br>
+            <em class="hero__accent">es la operativa</em>
           </h1>
           <p class="hero__lead">
-            Nos encargamos del <strong>catálogo, campañas y operativa diaria</strong> de tu ecommerce
-            para que tú te centres en hacer crecer el negocio —
-            <strong>sin depender de tu tiempo</strong>
+            Catálogo desordenado, campañas que llegan tarde y una operativa que depende de ti. <strong>Nos encargamos de todo</strong> para que puedas crecer sin parches de último minuto.
           </p>
-          <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center">
-            <a href="#contacto" class="btn btn--primary btn--lg">Delegar la operativa</a>
-            <a href="servicios.html" class="btn btn--outline btn--lg">Ver servicios</a>
+          <div class="hero__cta-group">
+            <a href="#contacto" class="btn btn--primary btn--lg">Solicitar diagnóstico gratuito</a>
+            <a href="servicios.html" class="btn btn--outline btn--lg">Cómo trabajamos</a>
           </div>
+          <p class="hero__trust">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Sin compromiso · Respuesta en 24 h · Primera consulta gratuita
+          </p>
         </div>
       </div>
     </section>
@@ -106,9 +158,7 @@
           Tu tienda tiene visitas. El problema es la operativa que hay detrás.
         </h2>
         <p class="section__lead text-center">
-          Actualizar productos, corregir precios, activar campañas, gestionar el catálogo…
-          Cada hora que dedicas a esto es una hora que no dedicas a hacer crecer tu negocio.
-        </p>
+         Actualizar productos, corregir precios, activar campañas y organizar el catálogo resta foco a lo más importante: hacer crecer tu negocio.      </p>
       </div>
       <div class="container">
         <div class="pain-grid">
@@ -116,25 +166,25 @@
             <div class="pain-card__icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             </div>
-            <p>Horas semanales perdidas en tareas operativas que no deberían depender de ti</p>
+            <p>Horas semanales perdidas en tareas operativas que no deberían depender de ti.</p>
           </div>
           <div class="pain-card" data-animate>
             <div class="pain-card__icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             </div>
-            <p>Errores en precios, stocks o variantes que dañan la confianza y bloquean ventas</p>
+            <p>Errores en precios, stocks o variantes que dañan la confianza y bloquean ventas.</p>
           </div>
           <div class="pain-card" data-animate>
             <div class="pain-card__icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
             </div>
-            <p>Campañas que se lanzan tarde o mal configuradas porque nadie las gestiona a tiempo</p>
+            <p>Campañas que se lanzan tarde o mal configuradas porque nadie las gestiona a tiempo.</p>
           </div>
           <div class="pain-card" data-animate>
             <div class="pain-card__icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
             </div>
-            <p>Catálogo desorganizado que confunde al cliente y reduce la tasa de conversión</p>
+            <p>Catálogo desorganizado que confunde al cliente y reduce la tasa de conversión.</p>
           </div>
         </div>
       </div>
@@ -145,165 +195,120 @@
     <section class="mid-cta" aria-label="Llamada a la acción">
       <div class="container">
         <span class="mid-cta__eyebrow">Primera consulta gratuita</span>
-        <h2 class="mid-cta__title">La mayoría de los ecommerce no necesita más tráfico. Necesita mejor operativa.</h2>
-        <p class="mid-cta__lead">Una tienda bien gestionada vende más con el mismo tráfico. Deléganos la operativa completa y céntrate en lo que realmente hace crecer un negocio.</p>
+        <h2 class="mid-cta__title">¿Y si el problema no es el tráfico, sino la base?</h2>
+        <p class="mid-cta__lead">Una tienda bien estructurada convierte más con el mismo tráfico. Cuéntanos tu situación y diseñamos juntos un plan de acción concreto.</p>
         <div class="mid-cta__actions">
-          <a href="#contacto" class="btn btn--primary btn--lg">Hablemos de tu tienda</a>
+          <a href="#contacto" class="btn btn--primary btn--lg">Agendar consulta gratuita</a>
           <a href="servicios.html" class="btn btn--outline btn--lg">Ver todos los servicios</a>
         </div>
-        <p class="mid-cta__note">Sin compromiso. Te respondemos en menos de 24 horas.</p>
+        <p class="mid-cta__note">Sin compromiso · Respuesta en menos de 24 horas</p>
       </div>
     </section>
 
 
-    <!-- CÓMO TRABAJAMOS -->
-    <section id="como-trabajamos" class="section bg-light" aria-labelledby="work-title">
+    <!-- PROCESO UNIFICADO -->
+    <section id="como-trabajamos" class="section bg-light" aria-labelledby="process-title">
       <div class="container">
-        <div class="section__header">
-          <h2 id="work-title" class="section__title text-center">Cómo trabajamos en tu ecommerce</h2>
-          <p class="section__lead text-center">
-            Un proceso estructurado para que tu tienda funcione sin que tengas que ocuparte de los detalles
-          </p>
-        </div>
 
-        <div class="work-grid">
-          <div class="work-card" data-animate>
-            <span class="work-card__num">01</span>
-            <div class="work-card__icon" aria-hidden="true">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              </svg>
-            </div>
-            <h3>Acceso y análisis</h3>
-            <p>Revisamos tu tienda, catálogo y configuración para entender su estado actual.</p>
+        <div class="process-header">
+          <div class="process-header__left" data-animate>
+            <span class="section__eyebrow">Nuestra forma de trabajar</span>
+            <h2 id="process-title" class="section__title">Cómo estructuramos y optimizamos tu tienda online</h2>
           </div>
-
-          <div class="work-card" data-animate>
-            <span class="work-card__num">02</span>
-            <div class="work-card__icon" aria-hidden="true">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
-                <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
-                <line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
-              </svg>
-            </div>
-            <h3>Orden o ajuste de base</h3>
-            <p>Organizamos lo necesario o validamos que todo esté correctamente estructurado.</p>
-          </div>
-
-          <div class="work-card" data-animate>
-            <span class="work-card__num">03</span>
-            <div class="work-card__icon" aria-hidden="true">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
-                <polyline points="22 4 12 14.01 9 11.01"/>
-              </svg>
-            </div>
-            <h3>Control y mantenimiento</h3>
-            <p>Nos aseguramos de que todo se mantenga ordenado y funcionando correctamente.</p>
-          </div>
-
-          <div class="work-card" data-animate>
-            <span class="work-card__num">04</span>
-            <div class="work-card__icon" aria-hidden="true">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
-                <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
-              </svg>
-            </div>
-            <h3>Actualización de catálogo</h3>
-            <p>Mantenemos productos, precios, stocks y variantes al día de forma continua.</p>
-          </div>
-
-          <div class="work-card" data-animate>
-            <span class="work-card__num">05</span>
-            <div class="work-card__icon" aria-hidden="true">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
-                <line x1="7" y1="7" x2="7.01" y2="7"/>
-              </svg>
-            </div>
-            <h3>Gestión de campañas</h3>
-            <p>Configuramos descuentos y activamos campañas comerciales en el momento justo.</p>
-          </div>
-
-          <div class="work-card" data-animate>
-            <span class="work-card__num">06</span>
-            <div class="work-card__icon" aria-hidden="true">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="20" x2="18" y2="10"/>
-                <line x1="12" y1="20" x2="12" y2="4"/>
-                <line x1="6" y1="20" x2="6" y2="14"/>
-              </svg>
-            </div>
-            <h3>Reporting mensual</h3>
-            <p>Recibes un informe claro con los cambios realizados y la evolución de tu tienda.</p>
+          <div class="process-header__right" data-animate>
+            <p class="section__lead">Creamos una base sólida para vender mejor, operar con claridad y escalar sin desorden. Siempre en el mismo orden: primero estructura, después ejecución.</p>
           </div>
         </div>
 
-        <div class="text-center" style="margin-top: 3rem">
-          <a href="#contacto" class="btn btn--primary">Aplicarlo a mi tienda</a>
-        </div>
-      </div>
-    </section>
+        <div class="process-grid">
 
+          <div class="process-step" data-animate>
+            <div class="process-step__top">
+              <span class="process-step__num">01</span>
+              <div class="process-step__icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+              </div>
+            </div>
+            <h3 class="process-step__title">Diagnóstico inicial</h3>
+            <p class="process-step__desc">Revisamos catálogo, navegación y configuración para detectar fricciones y oportunidades reales.</p>
+          </div>
 
-    <!-- METODOLOGÍA -->
-    <section id="metodologia" class="section bg-navy" aria-labelledby="method-title">
-      <div class="container">
-        <div class="section__header">
-          <h2 id="method-title" class="section__title text-white text-center">
-            Nuestra metodología de trabajo
-          </h2>
-          <p class="section__lead text-white-muted text-center">
-            No trabajamos sobre desorden. Primero estructuramos, después gestionamos.
-          </p>
+          <div class="process-step" data-animate>
+            <div class="process-step__top">
+              <span class="process-step__num">02</span>
+              <div class="process-step__icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                  <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                </svg>
+              </div>
+            </div>
+            <h3 class="process-step__title">Estructura comercial</h3>
+            <p class="process-step__desc">Ordenamos colecciones, categorías y arquitectura para facilitar la navegación y la decisión de compra.</p>
+          </div>
+
+          <div class="process-step" data-animate>
+            <div class="process-step__top">
+              <span class="process-step__num">03</span>
+              <div class="process-step__icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              </div>
+            </div>
+            <h3 class="process-step__title">Experiencia de compra</h3>
+            <p class="process-step__desc">Ajustamos recorridos, fichas de producto y elementos clave para reducir fricciones y mejorar la conversión.</p>
+          </div>
+
+          <div class="process-step" data-animate>
+            <div class="process-step__top">
+              <span class="process-step__num">04</span>
+              <div class="process-step__icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+                </svg>
+              </div>
+            </div>
+            <h3 class="process-step__title">Implementación técnica</h3>
+            <p class="process-step__desc">Configuramos funciones, integraciones y tema en Shopify con base sólida, limpia y orientada al rendimiento.</p>
+          </div>
+
+          <div class="process-step" data-animate>
+            <div class="process-step__top">
+              <span class="process-step__num">05</span>
+              <div class="process-step__icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/>
+                </svg>
+              </div>
+            </div>
+            <h3 class="process-step__title">Operación continua</h3>
+            <p class="process-step__desc">Actualizamos productos, precios, promociones y configuraciones con criterio operativo y sin interrupciones.</p>
+          </div>
+
+          <div class="process-step" data-animate>
+            <div class="process-step__top">
+              <span class="process-step__num">06</span>
+              <div class="process-step__icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"/>
+                  <line x1="12" y1="20" x2="12" y2="4"/>
+                  <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+              </div>
+            </div>
+            <h3 class="process-step__title">Seguimiento y mejora</h3>
+            <p class="process-step__desc">Medimos resultados, detectamos oportunidades y proponemos los siguientes pasos con datos reales.</p>
+          </div>
+
         </div>
 
-        <div class="method-grid">
-          <div class="method-item" data-animate>
-            <span class="method-item__num">01</span>
-            <div>
-              <h3 class="method-item__title">Análisis estratégico</h3>
-              <p class="method-item__desc">Analizamos tu negocio y estructura para definir una base clara, coherente y escalable.</p>
-            </div>
-          </div>
-          <div class="method-item" data-animate>
-            <span class="method-item__num">02</span>
-            <div>
-              <h3 class="method-item__title">Arquitectura de tienda</h3>
-              <p class="method-item__desc">Organizamos navegación y catálogo para garantizar orden operativo y claridad en la compra.</p>
-            </div>
-          </div>
-          <div class="method-item" data-animate>
-            <span class="method-item__num">03</span>
-            <div>
-              <h3 class="method-item__title">Diseño orientado a conversión</h3>
-              <p class="method-item__desc">Definimos el recorrido de compra para reducir fricciones y mejorar la experiencia.</p>
-            </div>
-          </div>
-          <div class="method-item" data-animate>
-            <span class="method-item__num">04</span>
-            <div>
-              <h3 class="method-item__title">Desarrollo del tema</h3>
-              <p class="method-item__desc">Configuramos la tienda con una estructura sólida, correcta implementación y rendimiento estable.</p>
-            </div>
-          </div>
-          <div class="method-item" data-animate>
-            <span class="method-item__num">05</span>
-            <div>
-              <h3 class="method-item__title">Integración de aplicaciones</h3>
-              <p class="method-item__desc">Implementamos solo las apps necesarias, priorizando compatibilidad, rendimiento y escalabilidad.</p>
-            </div>
-          </div>
-          <div class="method-item" data-animate>
-            <span class="method-item__num">06</span>
-            <div>
-              <h3 class="method-item__title">Validación y lanzamiento</h3>
-              <p class="method-item__desc">Probamos, ajustamos y validamos la tienda antes de activarla, asegurando una base estable.</p>
-            </div>
-          </div>
+        <div class="text-center" style="margin-top: 3.5rem">
+          <a href="#contacto" class="btn btn--primary btn--lg">Empezar con un diagnóstico</a>
         </div>
+
       </div>
     </section>
 
@@ -314,23 +319,24 @@
         <div class="why-layout">
           <div class="why-left" data-animate>
             <h2 id="why-title" class="section__title">¿Por qué trabajar<br>con BrinkHub?</h2>
+            <a href="quienes-somos.html" class="link-more" style="display:inline-flex;align-items:center;gap:0.4rem;margin-top:1.5rem;font-weight:600">Conoce cómo trabajamos <span aria-hidden="true">→</span></a>
           </div>
           <div class="why-right">
             <div class="why-item" data-animate>
               <span class="why-item__check" aria-hidden="true">✓</span>
-              <p>No trabajamos sobre desorden. Primero <strong>estructuramos</strong>, después <strong>gestionamos</strong>.</p>
+              <p>Primero <strong>estructuramos</strong>, después ejecutamos. Nunca al revés.</p>
             </div>
             <div class="why-item" data-animate>
               <span class="why-item__check" aria-hidden="true">✓</span>
-              <p>No hacemos mantenimiento superficial. <strong>Ejecutamos la operativa</strong> de tu ecommerce.</p>
+              <p>No hacemos mantenimiento superficial. <strong>Ejecutamos la operativa completa</strong> de tu canal de venta.</p>
             </div>
             <div class="why-item" data-animate>
               <span class="why-item__check" aria-hidden="true">✓</span>
-              <p>Pensamos en operación real. Todo se mantiene ordenado, actualizado y <strong>listo para escalar</strong>.</p>
+              <p>Tu catálogo siempre actualizado, tus campañas siempre activas y tu estructura <strong>lista para escalar</strong>.</p>
             </div>
             <div class="why-item" data-animate>
               <span class="why-item__check" aria-hidden="true">✓</span>
-              <p>No vendemos diseño bonito. <strong>Construimos estructura de tienda</strong> lista para <strong>crecer</strong>.</p>
+              <p>No vendemos promesas. <strong>Construimos la base técnica y operativa</strong> que necesita tu negocio para escalar.</p>
             </div>
           </div>
         </div>
@@ -341,8 +347,8 @@
     <!-- ESTADÍSTICAS -->
     <section id="stats" class="section bg-navy" aria-labelledby="stats-title">
       <div class="container">
-        <h2 id="stats-title" class="section__title text-white text-center">El ecommerce en cifras</h2>
-        <p class="section__lead text-white-muted text-center">La plataforma más escalable para negocios que quieren crecer</p>
+        <h2 id="stats-title" class="section__title text-white text-center">El mercado no espera</h2>
+        <p class="section__lead text-white-muted text-center">El comercio digital global sigue creciendo. La pregunta es si tu operativa está lista para acompañar ese ritmo.</p>
         <div class="stats-grid">
           <div class="stat-item" data-animate>
             <div class="stat-item__value">
@@ -374,8 +380,8 @@
     <section id="servicios" class="section bg-white" aria-labelledby="services-title">
       <div class="container">
         <div class="section__header">
-          <h2 id="services-title" class="section__title text-center">Servicios complementarios</h2>
-          <p class="section__lead text-center">Más allá de la gestión continua, te acompañamos en cada etapa de tu ecommerce</p>
+          <h2 id="services-title" class="section__title text-center">¿Qué más podemos hacer por ti?</h2>
+          <p class="section__lead text-center">Además del mantenimiento continuo, acompañamos a tu negocio en cada etapa clave</p>
         </div>
         <div class="services-grid">
           <article class="service-card" data-animate>
@@ -399,8 +405,8 @@
               </svg>
             </div>
             <div class="service-card__body">
-              <h3>Optimización de ecommerce</h3>
-              <p>Auditamos y reestructuramos tu tienda para eliminar fricciones, mejorar la experiencia de compra y aumentar la conversión.</p>
+              <h3>Optimización y conversión</h3>
+              <p>Auditamos y reestructuramos tu canal de venta para eliminar fricciones, mejorar la experiencia de compra y aumentar la conversión.</p>
               <a href="servicios.html#optimizacion" class="link-more">Ver servicio <span aria-hidden="true">→</span></a>
             </div>
           </article>
@@ -413,7 +419,7 @@
             </div>
             <div class="service-card__body">
               <h3>Migración de plataforma</h3>
-              <p>Trasladamos tu ecommerce con planificación, control técnico y continuidad operativa total — sin perder posicionamiento ni datos.</p>
+              <p>Trasladamos tu canal de venta con planificación, control técnico y continuidad total — sin perder posicionamiento ni datos.</p>
               <a href="servicios.html#migracion" class="link-more">Ver servicio <span aria-hidden="true">→</span></a>
             </div>
           </article>
@@ -617,8 +623,8 @@
     <section id="blog" class="section bg-white" aria-labelledby="blog-title">
       <div class="container">
         <div class="section__header">
-          <h2 id="blog-title" class="section__title text-center">Últimos artículos</h2>
-          <p class="section__lead text-center">Recursos y estrategias para gestionar mejor tu ecommerce</p>
+          <h2 id="blog-title" class="section__title text-center">Lo último del blog</h2>
+          <p class="section__lead text-center">Artículos prácticos sobre catálogo, conversión y crecimiento para tiendas online</p>
         </div>
 
         <div class="blog-grid">
@@ -745,9 +751,15 @@
                   <input type="email" id="cf-email" name="email" placeholder="tu@empresa.com" autocomplete="email" required />
                 </div>
               </div>
-              <div class="form-group">
-                <label for="cf-web">Web de tu tienda</label>
-                <input type="url" id="cf-web" name="web" placeholder="https://miecommerce.com" autocomplete="url" />
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="cf-empresa">Empresa</label>
+                  <input type="text" id="cf-empresa" name="empresa" placeholder="Nombre de tu empresa" autocomplete="organization" required />
+                </div>
+                <div class="form-group">
+                  <label for="cf-web">Web <span style="font-weight:400;color:var(--gray-400)">(opcional)</span></label>
+                  <input type="url" id="cf-web" name="web" placeholder="https://miecommerce.com" autocomplete="url" />
+                </div>
               </div>
               <div class="form-group">
                 <label for="cf-message">¿En qué podemos ayudarte?</label>
@@ -758,6 +770,11 @@
                   <input type="checkbox" id="cf-consent" name="consent" required />
                   <span class="form-consent__text">He leído y acepto la <a href="politica-privacidad.html" target="_blank">política de privacidad</a>. Consiento el tratamiento de mis datos personales para que BrinkHub atienda mi consulta.</span>
                 </label>
+              </div>
+              <!-- Honeypot anti-spam: oculto para humanos, visible para bots -->
+              <div class="form-group form-group--honeypot" aria-hidden="true">
+                <label for="cf-website">No rellenar</label>
+                <input type="text" id="cf-website" name="website" tabindex="-1" autocomplete="off" />
               </div>
               <button type="submit" class="btn btn--primary btn--full">Enviar mensaje</button>
               <p class="form-note">Respondemos en menos de 24 horas en días laborables.</p>
@@ -847,22 +864,23 @@
           <a href="politica-privacidad.html">Política de privacidad</a>
           <a href="contacto.html">Información de contacto</a>
           <a href="aviso-legal.html">Aviso legal</a>
-          <a href="politica-cookies.html">Preferencias de cookies</a>
+          <a href="politica-cookies.html" data-cookie-settings>Preferencias de cookies</a>
         </div>
       </div>
     </div>
   </footer>
 
 
-  <!-- Cookie banner -->
-  <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Preferencias de cookies" aria-live="polite">
+  <!-- Banner de cookies (RGPD / LSSI-CE) -->
+  <div id="cookieBanner" class="cookie-banner" role="dialog" aria-modal="true" aria-label="Aviso de cookies" aria-live="polite" aria-atomic="true">
     <div class="cookie-banner__inner">
       <div class="cookie-banner__text">
-        <p>Usamos cookies propias y de terceros para mejorar tu experiencia de navegación y analizar el tráfico. Puedes <a href="politica-cookies.html">gestionar tus preferencias</a> o consultar nuestra <a href="politica-privacidad.html">política de privacidad</a>.</p>
+        <p>Utilizamos cookies esenciales para el funcionamiento del sitio. Con tu permiso, también usamos cookies de análisis y marketing. <a href="politica-cookies.html">Política de cookies</a> · <a href="politica-privacidad.html">Privacidad</a></p>
       </div>
       <div class="cookie-banner__actions">
+        <button id="cookieManage"  class="btn btn--ghost btn--sm">Gestionar</button>
         <button id="cookieDecline" class="btn btn--ghost btn--sm">Solo necesarias</button>
-        <button id="cookieAccept" class="btn btn--primary btn--sm">Aceptar todas</button>
+        <button id="cookieAccept"  class="btn btn--primary btn--sm">Aceptar todo</button>
       </div>
     </div>
   </div>

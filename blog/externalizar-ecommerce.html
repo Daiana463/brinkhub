@@ -225,22 +225,23 @@
           <a href="../politica-privacidad.html">Política de privacidad</a>
           <a href="../contacto.html">Información de contacto</a>
           <a href="../aviso-legal.html">Aviso legal</a>
-          <a href="../politica-cookies.html">Preferencias de cookies</a>
+          <a href="../politica-cookies.html" data-cookie-settings>Preferencias de cookies</a>
         </div>
       </div>
     </div>
   </footer>
 
 
-  <!-- Cookie banner -->
-  <div id="cookieBanner" class="cookie-banner" role="dialog" aria-label="Preferencias de cookies" aria-live="polite">
+  <!-- Banner de cookies (RGPD / LSSI-CE) -->
+  <div id="cookieBanner" class="cookie-banner" role="dialog" aria-modal="true" aria-label="Aviso de cookies" aria-live="polite" aria-atomic="true">
     <div class="cookie-banner__inner">
       <div class="cookie-banner__text">
         <p>Usamos cookies propias y de terceros para mejorar tu experiencia de navegación y analizar el tráfico. Puedes <a href="../politica-cookies.html">gestionar tus preferencias</a> o consultar nuestra <a href="../politica-privacidad.html">política de privacidad</a>.</p>
       </div>
       <div class="cookie-banner__actions">
+        <button id="cookieManage"  class="btn btn--ghost btn--sm">Gestionar</button>
         <button id="cookieDecline" class="btn btn--ghost btn--sm">Solo necesarias</button>
-        <button id="cookieAccept" class="btn btn--primary btn--sm">Aceptar todas</button>
+        <button id="cookieAccept"  class="btn btn--primary btn--sm">Aceptar todo</button>
       </div>
     </div>
   </div>
