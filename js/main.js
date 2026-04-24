@@ -245,7 +245,7 @@ function initAnalyzer() {
   ──────────────────────────────────────────────────────────────────
 */
 const FORM_ENDPOINT = 'https://api.web3forms.com/submit'; // ← no cambiar si usás Web3Forms
-const FORM_KEY      = 'TU_ACCESS_KEY_REAL';
+const FORM_KEY      = 'd5e4a122-1686-4552-9515-3f6e2378f880';
 
 function showFormSuccess(form) {
   const success = form.querySelector('.form-success');
