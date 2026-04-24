@@ -318,20 +318,28 @@ function initContactForm() {
           });
           if (!res.ok) throw new Error(res.status);
           showFormSuccess(form);
-          trackFormLead(form.id);
+          try { trackFormLead(form.id); } catch (_) {}
         } catch {
           if (btn) { btn.disabled = false; btn.textContent = 'Enviar mensaje'; }
           if (errorEl) errorEl.hidden = false;
         }
       } else {
-        /* Fallback mailto cuando Formspree no está configurado */
+        /* Fallback mailto — abre cliente de correo con datos prellenados */
         const subject = encodeURIComponent('Consulta desde brinkhub.es');
-        const body = encodeURIComponent(
+        const mailBody = encodeURIComponent(
           `Nombre: ${payload.nombre}\nEmail: ${payload.email}\nEmpresa: ${payload.empresa}\nWeb: ${payload.web}\n\n${payload.mensaje}`
         );
-        window.open(`mailto:info@brinkhub.es?subject=${subject}&body=${body}`, '_blank');
+        const mailLink = `mailto:info@brinkhub.es?subject=${subject}&body=${mailBody}`;
+        /* Crear <a> temporal para respetar el gesto de usuario en navegadores estrictos */
+        const a = document.createElement('a');
+        a.href = mailLink;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
         showFormSuccess(form);
-        trackFormLead(form.id);
+        try { trackFormLead(form.id); } catch (_) {}
       }
 
       submitting = false;
@@ -398,7 +406,7 @@ const GTM_ID        = 'GTM-XXXXXXX';       // GTM placeholder — sin ID real, n
 const META_PIXEL_ID = '2364129480769581';  // Meta Pixel
 
 const CONSENT_KEY     = 'bh_consent';
-const CONSENT_VERSION = '2';
+const CONSENT_VERSION = '3'; /* Bumpeado: invalida consent previo, forza re-aceptación */
 
 /*
   initConsentModeDefaults():
@@ -792,19 +800,24 @@ function initBlogFilter() {
 
 
 /* ─── 13. INIT ─── */
+/* Ejecuta cada módulo de forma aislada: un fallo no rompe los demás */
+function safeInit(name, fn) {
+  try { fn(); } catch (e) { console.error('[BrinkHub] Error en ' + name + ':', e); }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  initHeader();
-  initMobileMenu();
-  initSmoothScroll();
-  initScrollAnimations();
-  initCounters();
-  initFAQ();
-  initAnalyzer();
-  initContactForm();
-  initActiveNav();
-  initCookieBanner();
-  initCookieModal();
-  initCookieSettingsLinks();
-  initEventTracking();
-  initBlogFilter();
+  safeInit('header',        initHeader);
+  safeInit('mobileMenu',    initMobileMenu);
+  safeInit('smoothScroll',  initSmoothScroll);
+  safeInit('animations',    initScrollAnimations);
+  safeInit('counters',      initCounters);
+  safeInit('faq',           initFAQ);
+  safeInit('analyzer',      initAnalyzer);
+  safeInit('contactForm',   initContactForm);
+  safeInit('activeNav',     initActiveNav);
+  safeInit('cookieBanner',  initCookieBanner);
+  safeInit('cookieModal',   initCookieModal);
+  safeInit('cookieLinks',   initCookieSettingsLinks);
+  safeInit('eventTracking', initEventTracking);
+  safeInit('blogFilter',    initBlogFilter);
 });
