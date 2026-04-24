@@ -228,14 +228,24 @@ function initAnalyzer() {
 
 /* ─── 08. FORMULARIO DE CONTACTO ─── */
 /*
-   CONFIGURACIÓN FORMSPREE:
-   1. Crea cuenta gratuita en https://formspree.io
-   2. Crea formulario apuntando a info@brinkhub.es
-   3. Reemplaza 'YOUR_FORM_ID' con el ID asignado (ej: xpzeqlrv)
+  ──────────────────────────────────────────────────────────────────
+  CONFIGURACIÓN DEL FORMULARIO
+  ──────────────────────────────────────────────────────────────────
+  Opción A — Web3Forms (recomendado, gratis, sin cuenta):
+    1. Ve a https://web3forms.com
+    2. Ingresá info@brinkhub.es y hacé clic en "Create your Access Key"
+    3. Recibirás un Access Key por email
+    4. Pegá el key en FORM_KEY y dejá FORM_ENDPOINT como está
 
-   Si el ID no está configurado, el formulario usa mailto como fallback.
+  Opción B — Formspree:
+    1. Crea cuenta en https://formspree.io
+    2. Crea un formulario apuntando a info@brinkhub.es
+    3. Copiá el endpoint completo (ej: https://formspree.io/f/xpzeqlrv)
+    4. Pegá en FORM_ENDPOINT y dejá FORM_KEY vacío ('')
+  ──────────────────────────────────────────────────────────────────
 */
-const FORMSPREE_ID = 'YOUR_FORM_ID';
+const FORM_ENDPOINT = 'https://api.web3forms.com/submit'; // ← no cambiar si usás Web3Forms
+const FORM_KEY      = 'PEGAR_ACCESS_KEY_WEB3FORMS_AQUI';  // ← pegá tu Access Key aquí
 
 function showFormSuccess(form) {
   const success = form.querySelector('.form-success');
@@ -301,6 +311,14 @@ function initContactForm() {
       if (btn) { btn.disabled = true; btn.textContent = 'Enviando…'; }
       if (errorEl) errorEl.hidden = true;
 
+      /* Endpoint no configurado: mostrar error, nunca abrir cliente de correo */
+      if (FORM_KEY === 'PEGAR_ACCESS_KEY_WEB3FORMS_AQUI' && FORM_ENDPOINT.includes('web3forms')) {
+        if (btn) { btn.disabled = false; btn.textContent = 'Enviar mensaje'; }
+        if (errorEl) errorEl.hidden = false;
+        submitting = false;
+        return;
+      }
+
       const payload = {
         nombre:  f.name?.value.trim()    || '',
         email:   f.email?.value.trim()   || '',
@@ -309,37 +327,31 @@ function initContactForm() {
         mensaje: f.message?.value.trim() || '',
       };
 
-      if (FORMSPREE_ID !== 'YOUR_FORM_ID') {
-        try {
-          const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify(payload),
-          });
-          if (!res.ok) throw new Error(res.status);
-          showFormSuccess(form);
-          try { trackFormLead(form.id); } catch (_) {}
-        } catch {
-          if (btn) { btn.disabled = false; btn.textContent = 'Enviar mensaje'; }
-          if (errorEl) errorEl.hidden = false;
+      /* Web3Forms requiere access_key en el payload */
+      if (FORM_KEY) payload.access_key = FORM_KEY;
+
+      try {
+        const res = await fetch(FORM_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        /* Parsear respuesta: Web3Forms devuelve {success:bool}, Formspree devuelve {next:url} */
+        let data = {};
+        try { data = await res.json(); } catch (_) {}
+
+        if (!res.ok || data.success === false) {
+          throw new Error(data.message || ('HTTP ' + res.status));
         }
-      } else {
-        /* Fallback mailto — abre cliente de correo con datos prellenados */
-        const subject = encodeURIComponent('Consulta desde brinkhub.es');
-        const mailBody = encodeURIComponent(
-          `Nombre: ${payload.nombre}\nEmail: ${payload.email}\nEmpresa: ${payload.empresa}\nWeb: ${payload.web}\n\n${payload.mensaje}`
-        );
-        const mailLink = `mailto:info@brinkhub.es?subject=${subject}&body=${mailBody}`;
-        /* Crear <a> temporal para respetar el gesto de usuario en navegadores estrictos */
-        const a = document.createElement('a');
-        a.href = mailLink;
-        a.target = '_blank';
-        a.rel = 'noopener';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+
         showFormSuccess(form);
         try { trackFormLead(form.id); } catch (_) {}
+
+      } catch (err) {
+        if (btn) { btn.disabled = false; btn.textContent = 'Enviar mensaje'; }
+        if (errorEl) errorEl.hidden = false;
+        bhLog('Form error:', err);
       }
 
       submitting = false;
