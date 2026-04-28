@@ -505,16 +505,15 @@ function loadAnalytics() {
     bhLog('GTM inicializado:', GTM_ID);
   } else if (GA4_ID) {
     /* GA4 directo (activo) */
+    /* Los comandos deben estar en el dataLayer ANTES de que el script cargue */
+    window.gtag('js', new Date());
+    window.gtag('config', GA4_ID);
     const s = document.createElement('script');
     s.dataset.bhAnalytics = '1';
     s.async = true;
     s.src = `https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`;
     document.head.appendChild(s);
-    s.onload = function() {
-      window.gtag('js', new Date());
-      window.gtag('config', GA4_ID, { send_page_view: true });
-      bhLog('GA4 inicializado:', GA4_ID);
-    };
+    bhLog('GA4 inicializado:', GA4_ID);
   }
 }
 
