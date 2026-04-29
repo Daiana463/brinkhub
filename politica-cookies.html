@@ -3,19 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Política de cookies de BrinkHub. Información sobre las cookies utilizadas, su finalidad y cómo gestionarlas." />
+  <meta name="description" content="Política de cookies de BrinkHub. Información sobre las cookies utilizadas, finalidad y gestión del consentimiento." />
   <meta name="robots" content="noindex, follow" />
   <link rel="canonical" href="https://www.brinkhub.es/politica-cookies.html" />
   <title>Política de cookies | BrinkHub</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 
   <script>
-    window.dataLayer=window.dataLayer||[];
-    function gtag(){dataLayer.push(arguments)}
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+
     gtag('consent','default',{
       ad_storage:'denied',
       analytics_storage:'denied',
@@ -28,8 +31,8 @@
 
     (function(){
       try{
-        var c=JSON.parse(localStorage.getItem('bh_consent')||'null');
-        if(c&&c.v==='3'){
+        var c = JSON.parse(localStorage.getItem('bh_consent') || 'null');
+        if(c && c.v === '3'){
           gtag('consent','update',{
             ad_storage:c.marketing?'granted':'denied',
             analytics_storage:c.analytics?'granted':'denied',
@@ -38,19 +41,18 @@
           });
         }
       }catch(e){}
-    }());
+    })();
   </script>
 </head>
+
 <body>
 
 <header id="header" class="header">
   <div class="container">
     <nav class="nav" role="navigation" aria-label="Navegación principal">
+
       <a href="index.html" class="nav__logo" aria-label="BrinkHub inicio">
-        <svg class="nav__logo-mark" width="28" height="24" viewBox="0 0 28 24" fill="none" aria-hidden="true">
-          <path d="M14 0L28 24H0L14 0Z" fill="#D4A017"/>
-        </svg>
-        <span class="nav__logo-text">BrinkHub</span>
+        <img src="/brinkhub-lockup-white-transparent.svg" alt="BrinkHub" class="nav__logo-img">
       </a>
 
       <ul class="nav__links" role="list">
@@ -63,6 +65,7 @@
       <button class="nav__toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
         <span></span><span></span><span></span>
       </button>
+
     </nav>
   </div>
 
@@ -84,7 +87,9 @@
   <div class="container">
     <span class="page-hero__eyebrow">Legal</span>
     <h1 id="page-title" class="page-hero__title">Política de cookies</h1>
-    <p class="page-hero__lead">Información detallada sobre las cookies utilizadas en BrinkHub y cómo administrarlas.</p>
+    <p class="page-hero__lead">
+      Información sobre las cookies utilizadas en BrinkHub, su finalidad y cómo gestionarlas.
+    </p>
   </div>
 </section>
 
@@ -108,7 +113,7 @@
       <p>Las cookies no técnicas requieren el consentimiento previo, expreso e informado del usuario.</p>
 
       <h2>3. Responsable del tratamiento</h2>
-      <p>El responsable del tratamiento de los datos personales y de la gestión de cookies del presente sitio web es <strong>Daiana Estefanía Andereggen</strong>, titular de BrinkHub, con NIF Z0811153V.</p>
+      <p>El responsable del tratamiento de los datos personales y de la gestión de cookies del presente sitio web es Daiana Estefanía Andereggen, titular de BrinkHub, con NIF Z0811153V.</p>
       <p>Correo electrónico de contacto: <a href="mailto:info@brinkhub.es">info@brinkhub.es</a></p>
 
       <h2>4. Tipos de cookies utilizadas</h2>
@@ -117,13 +122,10 @@
       <p>Son imprescindibles para el funcionamiento del sitio web y permiten la navegación y uso de funciones básicas.</p>
       <p>No requieren consentimiento.</p>
       <ul>
-        <li><strong>_shopify_y</strong></li>
-        <li><strong>_shopify_s</strong></li>
-        <li><strong>localization</strong></li>
-        <li>Cookies de sesión y seguridad</li>
+        <li><strong>cf_clearance</strong></li>
       </ul>
-      <p><strong>Finalidad:</strong> gestión de sesión, seguridad del sitio, prevención de fraude y configuración regional.</p>
-      <p><strong>Duración:</strong> de sesión o persistente según configuración técnica.</p>
+      <p><strong>Finalidad:</strong> seguridad del sitio, prevención de fraude, protección frente a bots y validación de acceso seguro.</p>
+      <p><strong>Duración:</strong> temporal o persistente según configuración técnica.</p>
 
       <h3>b) Cookies de análisis o medición</h3>
       <p>Permiten analizar la navegación de los usuarios con fines estadísticos y de mejora.</p>
@@ -139,31 +141,23 @@
       <h3>c) Cookies publicitarias o de marketing</h3>
       <p>Permiten mostrar publicidad personalizada, remarketing y medir campañas.</p>
       <p>Solo se instalan con consentimiento expreso.</p>
-
       <p><strong>Servicios utilizados:</strong></p>
       <ul>
         <li>Meta Pixel (Facebook / Instagram Ads)</li>
-        <li>Google Ads</li>
       </ul>
 
       <h2>5. Detalle de cookies utilizadas</h2>
-
       <ul>
-        <li><strong>_shopify_y</strong>, técnica, Shopify, seguridad y prevención de fraude, hasta 1 año.</li>
-        <li><strong>_shopify_s</strong>, técnica, Shopify, identificador de sesión, 30 minutos.</li>
-        <li><strong>localization</strong>, técnica, Shopify, idioma o región, hasta 1 año.</li>
+        <li><strong>cf_clearance</strong>, técnica, Cloudflare, seguridad y validación de acceso, duración variable según configuración técnica.</li>
         <li><strong>_ga</strong>, análisis, Google Analytics, distinguir usuarios, hasta 14 meses.</li>
         <li><strong>_ga_*</strong>, análisis, Google Analytics, medir interacciones, hasta 14 meses.</li>
         <li><strong>_fbp</strong>, publicitaria, Meta, conversiones y personalización, hasta 3 meses.</li>
-        <li><strong>fr</strong>, publicitaria, Meta, remarketing, hasta 3 meses.</li>
-        <li><strong>_gcl_au</strong>, publicitaria, Google Ads, conversiones, hasta 3 meses.</li>
-        <li><strong>IDE</strong>, publicitaria, Google, publicidad personalizada, hasta 13 meses.</li>
       </ul>
 
       <p>Las duraciones indicadas son orientativas y pueden variar según la configuración de cada proveedor.</p>
 
       <h2>6. Cookies de terceros</h2>
-      <p>El sitio web puede utilizar cookies de terceros mediante servicios como Google Analytics, Google Ads y Meta Platforms, según herramientas activadas y consentimiento otorgado.</p>
+      <p>El sitio web puede utilizar cookies de terceros mediante servicios como Google Analytics, Meta Platforms y Cloudflare, según herramientas activadas y consentimiento otorgado.</p>
 
       <h2>7. Base jurídica</h2>
       <p>Las cookies técnicas se basan en el artículo 22.2 de la LSSI-CE por resultar necesarias para prestar el servicio solicitado.</p>
@@ -204,6 +198,7 @@
   <div class="container">
     <div class="footer__bottom">
       <p>© 2026 BrinkHub, Gestión de ecommerce</p>
+
       <div class="footer__legal">
         <a href="politica-privacidad.html">Política de privacidad</a>
         <a href="contacto.html">Información de contacto</a>
@@ -214,6 +209,28 @@
   </div>
 </footer>
 
+<div id="cookieBanner" class="cookie-banner" role="dialog" aria-modal="true" aria-label="Aviso de cookies">
+  <div class="cookie-banner__inner">
+
+    <div class="cookie-banner__text">
+      <p>
+        Utilizamos cookies esenciales para el funcionamiento del sitio.
+        Con tu permiso, también usamos cookies de análisis y marketing.
+        <a href="politica-cookies.html">Política de cookies</a> ·
+        <a href="politica-privacidad.html">Privacidad</a>
+      </p>
+    </div>
+
+    <div class="cookie-banner__actions">
+      <button id="cookieManage" class="btn btn--ghost btn--sm">Gestionar</button>
+      <button id="cookieDecline" class="btn btn--ghost btn--sm">Solo necesarias</button>
+      <button id="cookieAccept" class="btn btn--primary btn--sm">Aceptar todo</button>
+    </div>
+
+  </div>
+</div>
+
 <script src="js/main.js" defer></script>
+
 </body>
 </html>

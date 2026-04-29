@@ -291,10 +291,18 @@ a:focus-visible {
 }
 
 .nav__logo {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 9px;
+  text-decoration: none;
   flex-shrink: 0;
+}
+.nav__logo-img {
+  display: block;
+  height: 36px;
+  width: auto;
+}
+@media (max-width: 768px) {
+  .nav__logo-img { height: 32px; }
 }
 .nav__logo-text {
   font-size: 1.1rem;
