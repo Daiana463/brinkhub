@@ -293,6 +293,7 @@ a:focus-visible {
 .nav__logo {
   display: inline-flex;
   align-items: center;
+  gap: 9px;
   text-decoration: none;
   flex-shrink: 0;
 }
