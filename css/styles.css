@@ -293,7 +293,7 @@ a:focus-visible {
 .nav__logo {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
+  gap: 20px;
   text-decoration: none;
   flex-shrink: 0;
 }
@@ -1112,7 +1112,7 @@ a:focus-visible {
 }
 .footer__logo-img {
   display: block;
-  height: 20px;
+  height: 36px;
   width: auto;
 }
 .footer__brand > p {
