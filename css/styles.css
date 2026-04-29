@@ -299,7 +299,7 @@ a:focus-visible {
 }
 .nav__logo-img {
   display: block;
-  height: 20px;
+  height: 40px;
   width: auto;
 }
 @media (max-width: 768px) {
@@ -1101,7 +1101,7 @@ a:focus-visible {
 .footer__logo {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 20px;
   margin-bottom: 1rem;
 }
 .footer__logo span {
@@ -1112,7 +1112,7 @@ a:focus-visible {
 }
 .footer__logo-img {
   display: block;
-  height: 18px;
+  height: 20px;
   width: auto;
 }
 .footer__brand > p {

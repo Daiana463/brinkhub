@@ -1,0 +1,21 @@
+{
+  "name": "BrinkHub",
+  "short_name": "BrinkHub",
+  "description": "Gestión ecommerce en Shopify para tiendas online en España",
+  "start_url": "/",
+  "display": "browser",
+  "theme_color": "#0f1e2e",
+  "background_color": "#0f1e2e",
+  "icons": [
+    {
+      "src": "/favicon-48x48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
