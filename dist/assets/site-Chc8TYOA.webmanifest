@@ -1,0 +1,16 @@
+{
+  "name": "BrinkHub",
+  "short_name": "BrinkHub",
+  "description": "Gestión operativa para academias y cursos online",
+  "start_url": "/",
+  "display": "browser",
+  "theme_color": "#0F3157",
+  "background_color": "#0F3157",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

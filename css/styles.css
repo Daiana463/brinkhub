@@ -140,6 +140,7 @@ button { cursor: pointer; }
 .footer li, .footer a { color: rgba(255,255,255,.82); font-size: 13px; }
 .footer a:hover { color: var(--yellow); }
 .footer__bottom { display: flex; justify-content: space-between; gap: 20px; padding-top: 20px; }
+.footer__logo-img { max-width: 160px; height: auto; }
 .footer__bottom p { margin: 0; color: rgba(255,255,255,.62); font-size: 11px; }
 .footer__legal { display: flex; gap: 18px; flex-wrap: wrap; }
 .footer__legal a { font-size: 11px; }
@@ -303,9 +304,13 @@ section[id], .service-detail[id] { scroll-margin-top: calc(var(--nav-h) + 20px);
   .final-cta__art .shape--yellow { width: 60px; height: 60px; }
   .footer__grid { grid-template-columns: 1fr 1fr; gap: 35px; }
   .footer__brand { grid-column: 1 / -1; }
+  .footer__logo { font-size: 32px; }
+  .footer__logo-img { max-width: 165px; }
   .footer__bottom { display: grid; }
   .service-detail, .about-layout, .contact-layout { grid-template-columns: 1fr; gap: 24px; }
   .service-detail { padding: 58px 0; }
+  .about-principles .about-principle { padding: 18px 0; }
+  .about-principle h3 { font-size: 20px; line-height: 1.3; }
   .service-detail__number { order: -1; }
   .service-detail__columns { grid-template-columns: 1fr; }
   .contact-form { padding: 23px; }
@@ -323,4 +328,5 @@ section[id], .service-detail[id] { scroll-margin-top: calc(var(--nav-h) + 20px);
   .service-detail li::before { width: 11px; height: 7px; top: 6px; }
   .post-body li { padding-left: 22px; font-size: 14px; }
   .post-body li::before { width: 12px; height: 7px; top: 6px; }
+  .section-title { font-size: clamp(26px, 7.5vw, 36px); line-height: 1.3; }
 }
